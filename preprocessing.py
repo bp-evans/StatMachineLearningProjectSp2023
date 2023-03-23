@@ -1,18 +1,26 @@
 import preprocessor as p
 import pandas as pd
-
+import csv
 def process(filename):
     
     df = pd.read_csv(filename, header=None)
     tw_list = pd.DataFrame(df[1])
+    s_list = pd.DataFrame(df[2])
+    print(s_list[2])
     new_list = []
-    for tweet in tw_list:
-        if tweet not in new_list:
-            new_list.append(tweet)
+    new_s_list = []
+    for x in range(len(tw_list)):
+        if tw_list[1][x] not in new_list:
+            new_list.append(tw_list[1][x])
+            new_s_list.append(s_list[2][x])
     with open(f'{filename[:-4]}_cleaned.csv', 'w') as f:
-        for tweet in tw_list[1]:
+        for tweet in new_list:
             new_tweet = p.clean(tweet).replace(',','')
             f.write(f'{new_tweet},')
+    with open(f'{filename[:-4]}sentiments_cleaned.csv', 'w') as f:
+        writer = csv.writer(f)
+        for s in new_s_list:
+            f.write(f'{s},')
 
 if __name__ == '__main__':
     process('smileannotationsfinal.csv')
